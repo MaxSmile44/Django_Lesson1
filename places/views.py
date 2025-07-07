@@ -24,10 +24,9 @@ def index(request):
             },
             'properties': {
                 'title': place.title,
-                'placeId': 'placeId',
+                'placeId': place.slug,
                 'detailsUrl': detailsUrl
             }
         }
         context['value']['features'].append(features)
-    print(context)
     return render(request, 'places/index.html', context)
