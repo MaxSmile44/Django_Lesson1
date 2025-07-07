@@ -29,4 +29,5 @@ def index(request):
             }
         }
         context['value']['features'].append(features)
+    print(context)
     return render(request, 'places/index.html', context)
