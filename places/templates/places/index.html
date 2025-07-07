@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Куда пойти — Москва глазами Артёма</title>
-{% load static %}
+  {% load static %}
   <link rel="shortcut icon" href="{% static '/places/img/favicon.png' %}" type="image/png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -37,38 +37,7 @@
       width: 100px;
     }
   </style>
-  <script id="places-geojson" type="application/json">
-    {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.62, 55.793676]
-          },
-          "properties": {
-            "title": "«Легенды Москвы",
-            "placeId": "moscow_legends",
-            "detailsUrl": "{% static '/places/places/moscow_legends.json' %}"
-          }
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.64, 55.753676]
-          },
-          "properties": {
-            "title": "Крыши24.рф",
-            "placeId": "roofs24",
-            "detailsUrl": "{% static '/places/places/roofs24.json' %}"
-          }
-        }
-      ]
-    }
-  </script>
-
+  {{ value|json_script:"places-geojson" }}
   <script id="app-template" type="text/template">
     <div v-bind:class="{'sidebar-content': 1, 'bg-white': selectedPlace, 'bg-secondary': !selectedPlace}">
       <div v-if="promptVisible" class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
@@ -142,6 +111,7 @@
   <script src="{% static '/places/js/leaflet-sidebar.js' %}"></script>
 
   <script>
+    //var value = JSON.parse(document.getElementById('places-geojson').textContent);
     var map = L.map('map');
     map.setView([55.753989, 37.623191], 11);
 
@@ -282,25 +252,17 @@
       sidebarApp.loadingPlaceId = placeId;
 
       try {
-        let response = await fetch(detailsUrl);
-
-        if (!response.ok){
-          return;
-        }
-
-        let data = await response.json();
-
         if (sidebarApp.loadingPlaceId != placeId){
           // Place loading was cancelled by user
           return
         }
 
         sidebarApp.selectedPlace = {
-          title: data.title,
+          title: detailsUrl.title,
           placeId: placeId,
-          imgs: data.imgs || [],
-          short_description: data.description_short,
-          long_description: data.description_long,
+          imgs: detailsUrl.imgs || [],
+          short_description: detailsUrl.description_short,
+          long_description: detailsUrl.description_long,
         };
       } finally {
         if (sidebarApp.loadingPlaceId == placeId){
