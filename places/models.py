@@ -1,7 +1,6 @@
+import os
+
 from django.db import models
-
-#from asgi import application
-
 
 # Create your models here.
 class Place(models.Model):
@@ -25,7 +24,7 @@ class Image(models.Model):
     image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.pk} {self.place}'
+        return f'{os.path.splitext(f"{self.image}".split("/")[-1])[0]} {self.place}'
 
     class Meta:
         ordering = ['-place', '-pk']

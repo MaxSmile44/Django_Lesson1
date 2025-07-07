@@ -23,7 +23,7 @@ def get_images():
                 directory.mkdir(parents=True)
             response = requests.get(url)
             response.raise_for_status()
-            file_name = url.split('/')[-1]
+            file_name = f"{i}{os.path.splitext(url.split('/')[-1])[1]}"
             file_names = [_ for _ in os.listdir(directory)]
             if file_name not in file_names:
                 images.create(place=places.get(title=new_img['title']),
