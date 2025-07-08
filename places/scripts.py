@@ -30,7 +30,7 @@ def add_image(places, images, new_object):
 def add_places_with_images():
     places = Place.objects.all()
     images = Image.objects.all()
-    directory = 'places/static/places/places/'
+    directory = 'places/static/places/files/'
     file_names = [_ for _ in os.listdir(directory) if _.endswith('.json')]
     for name in file_names:
         with open(f'{directory}{name}', 'r', encoding='utf-8') as file:
