@@ -1,14 +1,17 @@
+from django.db.models import Prefetch
 from django.shortcuts import render
 
 from places.models import *
 
 
 def index(request):
-    places = Place.objects.all()
+    places = Place.objects.prefetch_related(
+        Prefetch('images', queryset=Image.objects.order_by('pk'))
+    )
     context = {'value': {'type': 'FeatureCollection', 'features': []}}
     for place in places:
         imgs = list()
-        for place_image in place.images.all().order_by('pk'):
+        for place_image in place.images.all():
             imgs.append(request.build_absolute_uri(place_image.image.url))
         detailsUrl = {
             'title': place.title,
