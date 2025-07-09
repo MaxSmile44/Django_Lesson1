@@ -16,13 +16,13 @@ def add_place(places, new_object, name):
 
 
 def add_image(places, images, new_object):
-        for i, link in enumerate(new_object['imgs'], 1):
+        for link in new_object['imgs']:
             directory = Path(f"./media/places/{new_object['title']}")
             if not directory.exists():
                 directory.mkdir(parents=True)
             response = requests.get(link)
             response.raise_for_status()
-            file_name = f"{i}{os.path.splitext(link.split('/')[-1])[1]}"
+            file_name = link.split('/')[-1]
             images.create(place=places.get(title=new_object['title']),
                           image=ContentFile(response.content, name=file_name))
 
