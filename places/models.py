@@ -21,10 +21,10 @@ def get_directory_path(instance, filename):
 
 class Image(models.Model):
     place = models.ForeignKey('Place', verbose_name='Место', related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path, null=True, blank=True)
+    image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path, default='places/static/places/img/no_image.jpg')
 
     def __str__(self):
-        return f'{os.path.splitext(f"{self.image}".split("/")[-1])[0]} {self.place}'
+        return f'{self.pk} {self.place}'
 
     class Meta:
         ordering = ['-place', '-pk']
