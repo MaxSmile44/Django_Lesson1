@@ -1,4 +1,4 @@
-# import settings
+import settings
 
 from django.http import JsonResponse
 from django.db.models import Prefetch
