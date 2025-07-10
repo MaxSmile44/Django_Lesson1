@@ -24,7 +24,7 @@ class Image(models.Model):
     place = models.ForeignKey('Place', verbose_name='Место', related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path, default='')
 
-    def get_preview(self):
+    def preview(self):
         height = 200 if (self.image.height) > 200 else (self.image.height)
         width = self.image.width / self.image.height * 200 if self.image.height > 200 else self.image.width
         return format_html(f'<img src="{self.image.url}" width="{width}" height="{height}" />')

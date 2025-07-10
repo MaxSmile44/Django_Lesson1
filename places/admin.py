@@ -6,8 +6,8 @@ from .models import *
 
 class ImageInline(SortableStackedInline):
     model = Image
-    readonly_fields = ['get_preview']
-    fields = [('place', 'image'), 'get_preview']
+    readonly_fields = ['preview']
+    fields = [('place', 'image'), 'preview']
     extra = 0
 
 
@@ -18,4 +18,4 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    readonly_fields = ['get_preview']
+    readonly_fields = ['preview']
