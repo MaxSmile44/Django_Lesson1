@@ -23,6 +23,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('places.urls')),
+    path('tinymce/', include('tinymce.urls')),
 ] + debug_toolbar_urls()
 
 
