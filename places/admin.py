@@ -1,15 +1,18 @@
+from adminsortable2.admin import SortableStackedInline, SortableAdminBase
 from django.contrib import admin
 
 from .models import *
 
 
-class ImageInline(admin.TabularInline):
+class ImageInline(SortableStackedInline):
     model = Image
-    readonly_fields = ('get_preview',)
+    readonly_fields = ['get_preview']
+    fields = [('place', 'image'), 'get_preview']
+    extra = 0
 
 
 @admin.register(Place)
-class ImageAdmin(admin.ModelAdmin):
+class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [ImageInline]
 
 
