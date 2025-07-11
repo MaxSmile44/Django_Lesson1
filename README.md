@@ -2,7 +2,7 @@
 
 Интерактивная карта Москвы, на которой есть все известные виды активного отдыха с подробными описаниями и комментариями.
 
-<img width="1209" height="880" alt="image" src="https://github.com/user-attachments/assets/244f5709-9e9f-453c-a587-85f18cbacfe6" />
+![Afisha](https://github.com/user-attachments/assets/d6acae5d-b740-47f3-a0ed-04386a0b37bf)
 
 ## Запуск
 
