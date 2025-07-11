@@ -5,6 +5,7 @@ import os
 
 from django.core.files.base import ContentFile
 from pathlib import Path
+
 from places.models import *
 
 

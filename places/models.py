@@ -1,10 +1,8 @@
-import os
-
 from django.db import models
 from django.utils.html import format_html
 from tinymce.models import HTMLField
 
-# Create your models here.
+
 class Place(models.Model):
     title = models.CharField(verbose_name='Название', max_length=200)
     slug = models.SlugField(max_length=255, unique=True)
