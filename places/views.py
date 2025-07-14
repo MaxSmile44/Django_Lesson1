@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-from places.models import *
+from places.models import Place, Image
 
 
 def index(request):

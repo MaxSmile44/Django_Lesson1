@@ -1,14 +1,10 @@
 import requests
 
-import json
-import os
-import urllib.parse
-
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from pathlib import Path
 
-from places.models import *
+from places.models import Place, Image
 
 
 class Command(BaseCommand):
