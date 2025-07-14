@@ -26,12 +26,9 @@ class Command(BaseCommand):
             new_object = response.json()
             if new_object['title'] not in places.values_list('title', flat=True).distinct():
                 images = Image.objects.all()
-                file_name = urllib.parse.unquote(link).split('/')[-1]
-                slug = os.path.splitext(file_name)[0]
-
-                places.create(title=new_object['title'], slug=slug,
-                              description_short=new_object['description_short'],
-                              description_long=new_object['description_long'], lat=new_object['coordinates']['lat'],
+                places.create(title=new_object['title'],
+                              short_description=new_object['description_short'],
+                              long_description=new_object['description_long'], lat=new_object['coordinates']['lat'],
                               lng=new_object['coordinates']['lng'])
 
                 directory = Path(f"./media/places/{new_object['title']}")

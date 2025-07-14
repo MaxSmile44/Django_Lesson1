@@ -17,8 +17,8 @@ def index(request):
             imgs.append(request.build_absolute_uri(place_image.image.url))
         detailsUrl = {
             'title': place.title,
-            'description_short': place.description_short,
-            'description_long': place.description_long,
+            'short_description': place.short_description,
+            'long_description': place.long_description,
             'imgs': imgs,
         }
         features = {
@@ -29,7 +29,7 @@ def index(request):
             },
             'properties': {
                 'title': place.title,
-                'placeId': place.slug,
+                'placeId': place.title,
                 'detailsUrl': detailsUrl
             }
         }
