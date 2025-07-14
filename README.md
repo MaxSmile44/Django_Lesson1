@@ -14,13 +14,13 @@
 pip install -r requirements.txt
 ```
 
-Создайте базу данных SQLite
+Создайте базу данных SQLite:
 
 ```
 python manage.py migrate
 ```
 
-Запустите разработческий сервер
+Запустите разработческий сервер:
 
 ```
 python manage.py runserver
@@ -37,23 +37,41 @@ python manage.py runserver
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts) (например ALLOWED_HOSTS=127.0.0.1,localhost)
 
 Генерируем секретный ключ(SECRET_KEY):
-- в терминале вводим `python manage.py shell`. Таким образом попадаем в консоль.
-- вводим в консоли `from django.core.management.utils import get_random_secret_key`
-- затем вводим `print(get_random_secret_key())`
+- для того, чтобы попасть в консоль, в терминале вводим:
+```
+python manage.py shell
+```
+- вводим в консоли:
+```
+from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())
+```
 - копируем полученный ключ
-- для выходы из консоли вводим `exit()` и нажимаем клавишу Enter на клавиатуре.
+- для выходы из консоли вводим
+```
+exit()
+```
 
 ## Добавление данных в базу данных
 
 Есть два способа добавления данных - через панель администратора и командой в терминале `python manage.py load_place {ссылка на json файл}`
 
 Чтобы войти в панель администратора, нужно:
-- создать суперпользователя командой `python manage.py createsuperuser` и введя придуманый вами логин и пароль
-- запустите разработческий сервер командой `python manage.py runserver`
+- создать суперпользователя командой:
+```
+python manage.py createsuperuser
+```
+- придумываем и вводим логин и пароль
+- запустите разработческий сервер командой:
+```
+python manage.py runserver
+```
 - перейти на страницу в браузере http://127.0.0.1:8000/admin и ввести ваш логи и пароль
 
-Для добавления новых мест через команду в терминале:
-ввести команду `python manage.py load_place {ссылка на json файл}`
+Для добавления новых мест через команду вводим в терминале:
+```
+python manage.py load_place {ссылка на json файл}
+```
 
 <img width="1092" height="31" alt="image" src="https://github.com/user-attachments/assets/2a3ef9bd-81f4-440f-bd97-892ab04c30e5" />
 
