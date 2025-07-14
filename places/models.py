@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.html import format_html
+from pathlib import Path
 from tinymce.models import HTMLField
 
 
@@ -15,7 +16,7 @@ class Place(models.Model):
 
 
 def get_directory_path(instance, filename):
-    return f'places/{instance.place}/{filename}'
+    return Path(f'places/{instance.place}/{filename}')
 
 
 class Image(models.Model):
