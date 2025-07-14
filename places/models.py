@@ -24,9 +24,7 @@ class Image(models.Model):
     image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path, default='')
 
     def preview(self):
-        height = 200 if (self.image.height) > 200 else (self.image.height)
-        width = self.image.width / self.image.height * 200 if self.image.height > 200 else self.image.width
-        return format_html(f'<img src="{self.image.url}" width="{width}" height="{height}" />')
+        return format_html(f'<img src="{self.image.url}" style="max-height: 200px;" />')
 
     def __str__(self):
         return f'{self.pk} {self.place}'
