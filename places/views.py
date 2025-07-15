@@ -9,7 +9,7 @@ from places.models import Place, Image
 def index(request):
     places = Place.objects.prefetch_related(
         Prefetch('images', queryset=Image.objects.order_by('pk'))
-    )  
+    )
     features = [
         {
             'type': 'Feature',
@@ -28,7 +28,7 @@ def index(request):
                         request.build_absolute_uri(place_image.image.url)
                         for place_image in place.images.all()
                     ],
-                }
+                },
             }
         } for place in places
     ]
@@ -40,15 +40,18 @@ def places(request, place_id):
     place = get_object_or_404(Place.objects.prefetch_related(
         Prefetch('images', queryset=Image.objects.order_by('pk'))
     ), pk=place_id)
-    imgs = [f'{settings.MEDIA_URL}{place_image.image}' for place_image in place.images.all()]
-    detailsUrl = {
+    imgs = [
+        request.build_absolute_uri(place_image.image.url)
+        for place_image in place.images.all()
+    ]
+    details = {
         'title': place.title,
         'imgs': imgs,
-        'description_short': place.description_short,
-        'description_long': place.description_long,
+        'short_description': place.short_description,
+        'long_description': place.long_description,
         'coordinates': {'lng': place.lng, 'lat': place.lat},
     }
-    return JsonResponse(detailsUrl, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+    return JsonResponse(details, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 2})
 
 
 
