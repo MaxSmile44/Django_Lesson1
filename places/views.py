@@ -9,19 +9,9 @@ from places.models import Place, Image
 def index(request):
     places = Place.objects.prefetch_related(
         Prefetch('images', queryset=Image.objects.order_by('pk'))
-    )
-    context = {'value': {'type': 'FeatureCollection', 'features': []}}
-    for place in places:
-        imgs = list()
-        for place_image in place.images.all():
-            imgs.append(request.build_absolute_uri(place_image.image.url))
-        detailsUrl = {
-            'title': place.title,
-            'short_description': place.short_description,
-            'long_description': place.long_description,
-            'imgs': imgs,
-        }
-        features = {
+    )  
+    features = [
+        {
             'type': 'Feature',
             'geometry': {
                 'type': "Point",
@@ -30,10 +20,19 @@ def index(request):
             'properties': {
                 'title': place.title,
                 'placeId': place.title,
-                'detailsUrl': detailsUrl
+                'detailsUrl': {
+                    'title': place.title,
+                    'short_description': place.short_description,
+                    'long_description': place.long_description,
+                    'imgs': [
+                        request.build_absolute_uri(place_image.image.url)
+                        for place_image in place.images.all()
+                    ],
+                }
             }
-        }
-        context['value']['features'].append(features)
+        } for place in places
+    ]
+    context = {'value': {'type': 'FeatureCollection', 'features': features}}
     return render(request, 'places/index.html', context)
 
 
@@ -50,3 +49,6 @@ def places(request, place_id):
         'coordinates': {'lng': place.lng, 'lat': place.lat},
     }
     return JsonResponse(detailsUrl, safe=False, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+
+
+

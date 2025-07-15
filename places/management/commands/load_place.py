@@ -24,7 +24,8 @@ class Command(BaseCommand):
                 images = Image.objects.all()
                 places.create(title=new_object['title'],
                               short_description=new_object['description_short'],
-                              long_description=new_object['description_long'], lat=new_object['coordinates']['lat'],
+                              long_description=new_object['description_long'],
+                              lat=new_object['coordinates']['lat'],
                               lng=new_object['coordinates']['lng'])
 
                 directory = Path(f"./media/places/{new_object['title']}")
