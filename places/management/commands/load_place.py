@@ -28,13 +28,14 @@ class Command(BaseCommand):
                     lng=new_object['coordinates']['lng']
                 )
 
-                for link in new_object['imgs']:
+                for i, link in enumerate(new_object['imgs'], 1):
                     response = requests.get(link)
                     response.raise_for_status()
                     image_name = link.split('/')[-1]
                     Image.objects.get_or_create(
                         place=get_object_or_404(Place, title=new_object['title']),
-                        image=ContentFile(response.content, name=image_name)
+                        image=ContentFile(response.content, name=image_name),
+                        number=i
                     )
                 self.stdout.write(f'Successfully load file from link: {new_object["title"]}')
             else:

@@ -22,12 +22,13 @@ def get_directory_path(instance, filename):
 class Image(models.Model):
     place = models.ForeignKey('Place', verbose_name='Место', related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path)
+    number = models.PositiveIntegerField(verbose_name='Номер фото')
 
     def preview(self):
         return format_html(f'<img src="{self.image.url}" style="max-height: 200px;" />')
 
     def __str__(self):
-        return f'{self.pk} {self.place}'
+        return f'{self.number} {self.place}'
 
     class Meta:
-        ordering = ['-place', '-pk']
+        ordering = ['-place', '-number']
