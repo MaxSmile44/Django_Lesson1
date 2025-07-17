@@ -25,7 +25,8 @@ class Image(models.Model):
     number = models.PositiveIntegerField(verbose_name='Номер фото', default=0, null=False, blank=False)
 
     def preview(self):
-        return format_html(f'<img src="{self.image.url}" style="max-height: 200px;" />')
+        return format_html(f'<img src="{self.image.url}"'
+                           f'style="max-width: 400px; max-height: 200px; width: auto; height: auto;" />')
 
     def __str__(self):
         return f'{self.number} {self.place}'
