@@ -22,7 +22,7 @@ def get_directory_path(instance, filename):
 class Image(models.Model):
     place = models.ForeignKey('Place', verbose_name='Место', related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(verbose_name='Фото', upload_to=get_directory_path)
-    number = models.PositiveIntegerField(verbose_name='Номер фото')
+    number = models.PositiveIntegerField(verbose_name='Номер фото', default=0, null=False, blank=False)
 
     def preview(self):
         return format_html(f'<img src="{self.image.url}" style="max-height: 200px;" />')
