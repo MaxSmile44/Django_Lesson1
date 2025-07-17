@@ -36,11 +36,11 @@ def places(request, place_id):
         Prefetch('images', queryset=Image.objects.order_by('pk'))
     ), pk=place_id)
     imgs = [f'{settings.MEDIA_URL}{place_image.image}' for place_image in place.images.all()]
-    details = {
+    place_details = {
         'title': place.title,
         'imgs': imgs,
         'short_description': place.short_description,
         'long_description': place.long_description,
         'coordinates': {'lng': place.lng, 'lat': place.lat},
     }
-    return JsonResponse(details, safe=True, json_dumps_params={'ensure_ascii': False, 'indent': 2})
+    return JsonResponse(place_details, safe=True, json_dumps_params={'ensure_ascii': False, 'indent': 2})
