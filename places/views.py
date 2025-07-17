@@ -22,7 +22,7 @@ def index(request):
                 'title': place.title,
                 'placeId': place.title,
                 'detailsUrl': requests.get(
-                    f"http://127.0.0.1:8000/{reverse('places', kwargs={'place_id': place.id})}"
+                    request.build_absolute_uri(reverse('places', kwargs={'place_id': place.id}))
                 ).json()
             }
         } for place in places
