@@ -15,8 +15,13 @@ class ImageInline(SortableStackedInline):
 class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [ImageInline]
     search_fields = ('title',)
+    list_display = ['title']
+    list_filter = ['title']
 
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     autocomplete_fields = ['place']
+    readonly_fields = ['preview']
+    list_display = ['place', 'number', 'place', 'preview']
+    list_filter = ['place']
