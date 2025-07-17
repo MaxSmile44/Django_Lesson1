@@ -23,5 +23,5 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     autocomplete_fields = ['place']
     readonly_fields = ['preview']
-    list_display = ['place', 'number', 'place', 'preview']
+    list_display = ['number', 'place', 'preview']
     list_filter = ['place']
