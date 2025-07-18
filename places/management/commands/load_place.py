@@ -1,10 +1,15 @@
 import requests
+import sys
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.shortcuts import get_object_or_404
 
 from places.models import Place, Image
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 class Command(BaseCommand):
@@ -19,7 +24,8 @@ class Command(BaseCommand):
             response = requests.get(link)
             response.raise_for_status()
             new_object = response.json()
-            place, created =Place.objects.get_or_create(
+            places = Place.objects.prefetch_related('images').all()
+            place, place_created = places.get_or_create(
                 title=new_object['title'],
                 defaults={
                     'short_description': new_object['description_short'],
@@ -28,8 +34,8 @@ class Command(BaseCommand):
                     'lng': new_object['coordinates']['lng']
                 }
             )
-            if created:
-                self.stdout.write(f'Successfully load file from link: {new_object["title"]}')
+            if place_created:
+                self.stdout.write(f'Successfully load place from link: {new_object["title"]}')
             else:
                 self.stdout.write(f'This place has already been added earlier')
 
@@ -37,12 +43,17 @@ class Command(BaseCommand):
                 response = requests.get(link)
                 response.raise_for_status()
                 image_name = link.split('/')[-1]
-                Image.objects.get_or_create(
-                    place=get_object_or_404(Place, title=new_object['title']),
+                image, image_created = Image.objects.get_or_create(
+                    place=get_object_or_404(places, title=new_object['title']),
                     number = number,
                     defaults={'image': ContentFile(response.content, name=image_name)}
                 )
+                if image_created:
+                    self.stdout.write(f'Successfully load image {image_name} from link: {link}')
+                else:
+                    self.stdout.write(f'Image {image_name} has already been added earlier')
+
         except requests.exceptions.HTTPError as error:
-            print(f'HTTP error occurred: {error}')
+            eprint(f'HTTP error occurred: {error}')
         except NameError as error:
-            print(f'Name error occurred: {error}')
+            eprint(f'Name error occurred: {error}')
