@@ -34,7 +34,7 @@ class Image(models.Model):
         return f'{self.number} {self.place}'
 
     class Meta:
-        ordering = ['-place', '-number']
+        ordering = ['-number']
         indexes = [
             models.Index(fields=['number'])
         ]
