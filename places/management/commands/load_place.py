@@ -4,7 +4,6 @@ import time
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from django.shortcuts import get_object_or_404
 
 from places.models import Place, Image
 
@@ -22,35 +21,25 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         link = options['link']
         try:
-            while True:
-                try:
-                    response = requests.get(link)
-                    response.raise_for_status()
-                    new_object = response.json()
-                    places = Place.objects.prefetch_related('images').all()
-                    place, place_created = places.get_or_create(
-                        title=new_object['title'],
-                        defaults={
-                            'short_description': new_object['description_short'],
-                            'long_description': new_object['description_long'],
-                            'lat': new_object['coordinates']['lat'],
-                            'lng': new_object['coordinates']['lng']
-                        }
-                    )
-                    if place_created:
-                        self.stdout.write(f'Successfully load place from link: {new_object["title"]}')
-                        break
-                    else:
-                        self.stdout.write(f'This place has already been added earlier')
-                        break
-                except requests.exceptions.ConnectionError as error:
-                    eprint(f'Connection error occurred: {error}')
-                    time.sleep(5)
-                except requests.exceptions.ChunkedEncodingError as error:
-                    eprint(f'ChunkedEncodingError occurred: {error}')
-                    time.sleep(5)
+            response = requests.get(link)
+            response.raise_for_status()
+            new_object = response.json()
+            place, place_created = Place.objects.prefetch_related('images').get_or_create(
+                title=new_object['title'],
+                defaults={
+                    'short_description': new_object['description_short'],
+                    'long_description': new_object['description_long'],
+                    'lat': new_object['coordinates']['lat'],
+                    'lng': new_object['coordinates']['lng']
+                }
+            )
+            if place_created:
+                self.stdout.write(f'Successfully load place from link: {new_object["title"]}')
+            else:
+                self.stdout.write(f'This place has already been added earlier')
 
             added_images_count = 0
+            connection_attempts_number = 0
             images_count = len(new_object['imgs'])
             initial_number = 1
             while added_images_count < images_count:
@@ -60,7 +49,7 @@ class Command(BaseCommand):
                         response.raise_for_status()
                         image_name = link.split('/')[-1]
                         image, image_created = Image.objects.get_or_create(
-                            place=get_object_or_404(places, title=new_object['title']),
+                            place=place,
                             number = number,
                             defaults={'image': ContentFile(response.content, name=image_name)}
                         )
@@ -81,11 +70,35 @@ class Command(BaseCommand):
                     new_object['imgs'].remove(link)
                 except requests.exceptions.ConnectionError as error:
                     eprint(f'Connection error occurred: {error}')
+                    connection_attempts_number += 1
+                    if connection_attempts_number >= 3:
+                        added_images_count += 1
+                        new_object['imgs'].remove(link)
+                        connection_attempts_number = 0
+                        self.stdout.write(f'Image from link: {link} was not added. Connection error')
                     time.sleep(5)
                 except requests.exceptions.ChunkedEncodingError as error:
                     eprint(f'ChunkedEncodingError occurred: {error}')
+                    connection_attempts_number += 1
+                    if connection_attempts_number >= 3:
+                        added_images_count += 1
+                        new_object['imgs'].remove(link)
+                        connection_attempts_number = 0
+                        self.stdout.write(f'Image from link: {link} was not added. Connection error')
+                    time.sleep(5)
+                except requests.exceptions.ReadTimeout as error:
+                    eprint(f'ReadTimeout occurred: {error}')
+                    if connection_attempts_number >= 3:
+                        added_images_count += 1
+                        new_object['imgs'].remove(link)
+                        connection_attempts_number = 0
+                        self.stdout.write(f'Image from link: {link} was not added. Connection error')
                     time.sleep(5)
 
+        except requests.exceptions.ConnectionError as error:
+            eprint(f'Connection error occurred: {error}')
+        except requests.exceptions.ChunkedEncodingError as error:
+            eprint(f'ChunkedEncodingError occurred: {error}')
         except KeyError as error:
             eprint(f'KeyError occurred: {error}')
         except NameError as error:
