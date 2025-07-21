@@ -1,5 +1,6 @@
 import requests
 
+from django.conf import settings
 from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -34,7 +35,7 @@ def places(request, place_id):
     place = get_object_or_404(Place.objects.prefetch_related(
         Prefetch('images', queryset=Image.objects.order_by('pk'))
     ), pk=place_id)
-    imgs = [f'{place_image.image}' for place_image in place.images.all()]
+    imgs = [f'{settings.MEDIA_URL}{place_image.image}' for place_image in place.images.all()]
     place_details = {
         'title': place.title,
         'imgs': imgs,
