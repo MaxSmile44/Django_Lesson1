@@ -16,7 +16,7 @@ class Place(models.Model):
 
 
 def get_directory_path(instance, filename):
-    return PurePath('places', f"{instance.place}", f"{filename}")
+    return PurePath('places', f'{instance.place}', f'{filename}')
 
 
 class Image(models.Model):
