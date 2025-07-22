@@ -35,7 +35,7 @@ def places(request, place_id):
     place = get_object_or_404(Place.objects.prefetch_related(
         Prefetch('images', queryset=Image.objects.order_by('pk'))
     ), pk=place_id)
-    imgs = [f'{settings.MEDIA_URL}{place_image.image}' for place_image in place.images.all()]
+    imgs = [f'{settings.MEDIA_URL}{place_image.image}' for place_image in place.images.all().order_by('number')]
     place_details = {
         'title': place.title,
         'imgs': imgs,
